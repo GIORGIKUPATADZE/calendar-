@@ -1,0 +1,212 @@
+#include<stdio.h>
+#include <conio.h>
+#include<stdlib.h>
+#include<stdbool.h>
+#define TRUE    1
+#define FALSE   0
+
+
+int inputyear(void)
+{
+	int year;
+
+	printf("Please enter a year (example: 2001) : ");
+	scanf("%d", &year);
+	return year;
+}
+
+int inputmonth(void)
+{
+	int month;
+
+	printf("Please enter a month (example: 1 for January) choose form (1...12)) : ");
+	scanf("%d", &month);
+	return month;
+}
+int inputday(void)
+{
+	int day;
+
+	printf("Please enter a day number : ");
+	scanf("%d", &day);
+	return day;
+}
+
+
+int daysinmonth[]={0,31,28,31,30,31,30,31,31,30,31,30,31};
+char *months[]=
+{
+	" ",
+	"\n\n\nJanuary",
+	"\n\n\nFebruary",
+	"\n\n\nMarch",
+	"\n\n\nApril",
+	"\n\n\nMay",
+	"\n\n\nJune",
+	"\n\n\nJuly",
+	"\n\n\nAugust",
+	"\n\n\nSeptember",
+	"\n\n\nOctober",
+	"\n\n\nNovember",
+	"\n\n\nDecember",
+};
+
+
+int Ddaycode(int year)
+{
+	int daycode;
+	int d1, d2, d3;
+
+	d1 = (year - 1.)/ 4.0;
+	d2 = (year - 1.)/ 100.;
+	d3 = (year - 1.)/ 400.;
+	daycode = (year + d1 - d2 + d3) %7;
+	return daycode;
+}
+
+
+int Dleapyear(int year)
+{
+	if(year% 4 == FALSE && year%100 != FALSE || year%400 == FALSE)
+	{
+		daysinmonth[2] = 29;
+		return TRUE;
+	}
+	else
+	{
+		daysinmonth[2] = 28;
+		return FALSE;
+	}
+}
+
+void calendar(int year, int daycode)
+{
+	int month, day;
+	for ( month = 1; month <= 12; month++ )
+	{
+		printf("%s", months[month]);
+		printf("\n\nSun  Mon  Tue  Wed  Thu  Fri  Sat\n" );
+
+		// Correct the position for the first date
+		for ( day = 1; day <= 1 + daycode * 5; day++ )
+		{
+			printf(" ");
+		}
+
+		// Print all the dates for one month
+		for ( day = 1; day <= daysinmonth[month]; day++ )
+		{
+			printf("%2d", day );
+
+			// Is day before Sat? Else start next line Sun.
+			if ( ( day + daycode ) % 7 > 0 )
+				printf("   " );
+			else
+				printf("\n " );
+		}
+			// Set position for next month
+			daycode = ( daycode + daysinmonth[month] ) % 7;
+	}
+}
+
+
+void monthcalendar(int year, int month, int daycode)
+{
+    int day;
+
+    printf("%s", months[month]);
+
+    printf("\n\nSun  Mon  Tue  Wed  Thu  Fri  Sat\n");
+
+     for(int k=1;k<month;k++){
+        daycode = (daycode + daysinmonth[k]) % 7;
+     }
+    //Correct the position for the first date
+    for (day = 1; day <= 1 + daycode * 5; day++)
+    {
+        printf(" ");
+    }
+
+    //Print all the dates for one month
+    for (day = 1; day <= daysinmonth[month]; day++)
+    {
+        printf("%2d", day);
+
+        //Is day before Sat? Else start next line Sun.
+        if ((day + daycode) % 7 > 0)
+            printf("   ");
+        else
+            printf("\n ");
+    }
+
+}
+
+
+void chooseday(int year, int month, int day)
+{
+if ((year% 4 == FALSE && year%100 != FALSE || year%400 == FALSE) && month == 2){
+
+    printf ("Choose day from (1...29):\n");
+    day=inputday();
+       }
+
+else if (month == 2){
+        printf ("Choose day from (1...28):\n");
+        day=inputday();
+
+}
+
+
+if (month = 1||3||5||8||10||7||12){
+    printf ("Choose day from (1...31):\n");
+    day=inputday();
+
+}
+else if (month = 4||6||9||11){
+        printf ("Choose day from (1...30):\n");
+    day=inputday();
+    }
+    else printf("ERROR");
+    return;
+}
+
+
+void getuserinput()
+{
+	char note[100];
+
+	printf("enter note : \n");
+	//gets("%[^\n]*s",&note);
+	fflush(stdin);
+	gets(note);
+	printf ("you entered : %s\n" , note);
+
+}
+
+
+int main(void){
+
+    int year, daycode, leapyear, month , day;
+//year
+	year = inputyear();
+
+	daycode = Ddaycode(year);
+	Dleapyear(year);
+	calendar(year, daycode);
+	printf("\n");
+
+
+//month
+    month =inputmonth();
+	daycode = Ddaycode(year);
+
+	monthcalendar(year,month,daycode);
+    printf("\n");
+//day
+    daycode = Ddaycode(year);
+    chooseday(year,month,day);
+    printf("\n");
+//input
+
+    getuserinput();
+}
